@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фото Галерея</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Верхняя панель с кнопками -->
+    <div class="navbar">
+        <a href="/" class="logo-link">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+        </a>
+        <div class="navbar-links">
+            <div class="navbar-item" id="categories">Categories
+                <div class="dropdown-menu">
+                    <a href="#" data-category="Portrait">Portrait</a>
+                    <a href="#" data-category="Animals">Animals</a>
+                    <a href="#" data-category="Landscape">Landscape</a>
+                    <a href="#" data-category="Black and white">Black and white</a>
+                </div>
+            </div>
+            <div class="navbar-item" id="view">View
+                <div class="dropdown-menu">
+                    <a href="#" data-view="3D">3D</a>
+                    <a href="#" data-view="2D">2D</a>
+                    <a href="#" data-view="Pixel">Pixel</a>
+                    <a href="#" data-view="Drawn">Drawn</a>
+                </div>
+            </div>
+            <div class="navbar-item" id="email">
+                Email
+                <div class="dropdown-menu">
+                    <a href="https://mail.google.com/mail/?view=cm&to=yarmak.arsen.it@gmail.com" target="_blank">
+                        yarmak.arsen.it@gmail.com
+                    </a>                    
+                </div>
+            </div>
+            <div class="navbar-item" id="contacts">
+                Contacts
+                <div class="dropdown-menu">
+                    <a href="tel:+420777725675">+420 777 725 675</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Блок для отображения фото -->
+    <div class="gallery">
+        {% for photo in photos %}
+        <div class="photo" data-category="{{ photo['category'] }}" data-view="{{ photo['view'] }}" data-path="{{ photo['path'] }}" data-likes="{{ photo['likes'] }}">
+            <img src="{{ url_for('static', filename=photo['path']) }}" alt="Фото" class="photo-image" onclick="showFullImage(this)">
+            <div class="photo-actions">
+                <button onclick="incrementLikes(this)" class="like-btn">
+                    ❤️ Like (<span class="like-count">{{ photo['likes'] }}</span>)
+                </button>
+                <button onclick="deletePhoto(this)" class="delete-btn">
+                    ⁝ Delete
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Добавление фото -->
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" id="file" required>
+        <div id="image-preview-path"></div> <!-- Показываем путь -->
+        
+        <select name="category" required>
+            <option value="Landscape">Landscape</option>
+            <option value="Portrait">Portrait</option>
+            <option value="Animals">Animals</option>
+            <option value="Black and white">Black and white</option>
+        </select>
+        <select name="view" required>
+            <option value="3D">3D</option>
+            <option value="2D">2D</option>
+            <option value="Pixel">Pixel</option>
+            <option value="Drawn">Drawn</option>
+        </select>
+        <button type="submit">Upload</button>
+    </form> 
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
